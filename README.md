@@ -4,13 +4,7 @@ Emoji Search is a Python-based CLI (Command Line Interface) application that all
 
 ## Installation
 
-You can use the package manager [pip](https://pip.pypa.io/en/stable/) to install emoji_search.
-
-```bash
-pip install emoji_search
-```
-
-Or you can install it from source:
+You can install it from source:
 
 ```bash
 pip install git+https://github.com/jacobmarks/emoji_search.git
