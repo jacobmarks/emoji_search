@@ -14,6 +14,7 @@ Or you can install it from source:
 
 ````bash
 pip install git+https://github.com/jacobmarks/emoji_search.git
+```
 
 ## Usage
 
@@ -25,7 +26,7 @@ emoji-search beautiful sunset
 
 This will return a list of emojis that most closely match the search term:
 
-```bash
+```plaintext
 +-------+------------------------+---------+----------+
 | Emoji |          Name          | Unicode | Distance |
 +-------+------------------------+---------+----------+
@@ -50,7 +51,7 @@ emoji-search -n 3 sleepy
 
 This will return the top 3 results:
 
-```bash
+```plaintext
 +-------+---------------+---------+----------+
 | Emoji |     Name      | Unicode | Distance |
 +-------+---------------+---------+----------+
