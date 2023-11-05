@@ -1,13 +1,11 @@
 # import json
 import pickle
-import gdown
 from tabulate import tabulate
 from appdirs import user_data_dir
 
 import argparse
 import os
 
-import numpy as np
 from scipy.spatial.distance import cosine
 import torch
 import clip
@@ -86,7 +84,6 @@ def search(query, top_n=5):
     raw_query_embedding = embed_query(raw_query)
     emoji_of_text_query_embedding = embed_query(emoji_of_text_query)
 
-    # distances = []
     raw_text_distances = []
     emoji_of_text_distances = []
     image_distances = []
