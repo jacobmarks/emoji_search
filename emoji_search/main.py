@@ -44,8 +44,6 @@ def download_embeddings():
                 if chunk:  # filter out keep-alive new chunks
                     f.write(chunk)
         print("Download complete.")
-    else:
-        print("Embeddings already downloaded.")
 
 
 def get_confirm_token(response):
