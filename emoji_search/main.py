@@ -79,37 +79,30 @@ def search(query, top_n=5):
     raw_query = query.lower()
     emoji_of_text_query = f"An emoji of {raw_query}"
 
-    raw_query_embedding = embed_query(raw_query)
     emoji_of_text_query_embedding = embed_query(emoji_of_text_query)
 
-    raw_text_distances = []
     emoji_of_text_distances = []
     image_distances = []
 
     for name, props in embeddings.items():
-        raw_text_embedding = props["raw_text_embedding"]
         emoji_of_text_embedding = props["emoji_of_text_embedding"]
         image_embedding = props["image_embedding"]
 
-        raw_text_distance = cosine(raw_query_embedding, raw_text_embedding)
         emoji_of_text_distance = cosine(
             emoji_of_text_query_embedding, emoji_of_text_embedding
         )
         image_distance = cosine(emoji_of_text_query_embedding, image_embedding)
-        raw_text_distances.append((name, raw_text_distance))
         emoji_of_text_distances.append((name, emoji_of_text_distance))
         image_distances.append((name, image_distance))
 
-    raw_text_distances = sorted(raw_text_distances, key=lambda x: x[1])
     emoji_of_text_distances = sorted(
         emoji_of_text_distances, key=lambda x: x[1]
     )
     image_distances = sorted(image_distances, key=lambda x: x[1])
 
-    raw_text_kds = raw_text_distances[:top_n]
     emoji_of_text_kds = emoji_of_text_distances[:top_n]
     image_kds = image_distances[:top_n]
-    kds = raw_text_kds + emoji_of_text_kds + image_kds
+    kds = emoji_of_text_kds + image_kds
 
     results = []
     keys = []

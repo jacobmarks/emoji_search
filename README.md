@@ -61,14 +61,12 @@ Emoji Search is a semantic search engine using the [CLIP](https://github.com/ope
 model from OpenAI. CLIP is a neural network trained on a variety of image-text pairs, and
 is able to semantically match images and text.
 
-To match emojis, Emoji Search attempts three different methods:
+To match emojis, Emoji Search attempts two different methods:
 
-1. Compare the embedding for the raw search term to the embeddings for all names
-   of emojis.
-2. Compare the embedding of the formatted search query
+1. Compare the embedding of the formatted search query
    "An emoji of <search-query>" to the embeddings of similarly formatted emoji
    names.
-3. Compare the embedding of the formatted search query with the embeddings of
+2. Compare the embedding of the formatted search query with the embeddings of
    high-resolution images of emojis.
 
 The results from each of these methods are combined and sorted by distance to
