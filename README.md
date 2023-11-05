@@ -12,7 +12,7 @@ pip install emoji_search
 
 Or you can install it from source:
 
-````bash
+```bash
 pip install git+https://github.com/jacobmarks/emoji_search.git
 ```
 
@@ -22,7 +22,7 @@ From the command line, use the `emoji-search` command, followed by a search term
 
 ```bash
 emoji-search beautiful sunset
-````
+```
 
 This will return a list of emojis that most closely match the search term:
 
