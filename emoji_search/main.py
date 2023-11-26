@@ -197,12 +197,11 @@ def search(query, top_n=5):
     embeddings = load_embeddings()
 
     raw_query = query.lower()
-    formatted_query = f"A photo of {raw_query}"
 
     top_2n = max(2 * top_n, 30)
 
     basic_results = _get_basic_search_results(
-        formatted_query, embeddings, top_2n=top_2n
+        raw_query, embeddings, top_2n=top_2n
     )
     refined_results = _refine_search_results(raw_query, basic_results)
 
