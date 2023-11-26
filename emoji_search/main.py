@@ -102,7 +102,7 @@ def _get_basic_search_results(query, embeddings, top_2n=30):
 
 
 def _reciprocal_rank(rank):
-    return 1 / rank
+    return 1.0 / rank if rank > 0 else 0
 
 
 def _get_ranks(results):
