@@ -77,7 +77,7 @@ def clip_embed_query(query):
     return text_features.detach().cpu().numpy()[0]
 
 
-def _get_basic_search_results(query, embeddings, top_2n=30):
+def _get_basic_search_results(query, embeddings, top_3n=30):
     query_embedding = clip_embed_query(query)
 
     for name, props in embeddings.items():
@@ -94,7 +94,7 @@ def _get_basic_search_results(query, embeddings, top_2n=30):
 
     results = sorted(embeddings.values(), key=lambda x: x["image_dist"])
 
-    basic_results = results[:top_2n]
+    basic_results = results[:top_3n]
     basic_results = [
         {
             "name": result["name"],
@@ -193,15 +193,15 @@ def _get_result_props(name, embeddings):
     return props
 
 
-def search(query, top_n=5):
+def search(query, top_n=10):
     embeddings = load_embeddings()
 
     raw_query = query.lower()
 
-    top_2n = max(2 * top_n, 30)
+    top_3n = max(3 * top_n, 50)
 
     basic_results = _get_basic_search_results(
-        raw_query, embeddings, top_2n=top_2n
+        raw_query, embeddings, top_3n=top_3n
     )
     refined_results = _refine_search_results(raw_query, basic_results)
 
@@ -248,7 +248,7 @@ def main():
         "--num_results",
         "-n",
         type=int,
-        default=5,
+        default=10,
         help="Number of emojis to return",
     )
     # Whether to copy the top result to the clipboard
