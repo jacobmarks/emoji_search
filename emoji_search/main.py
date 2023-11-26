@@ -81,12 +81,18 @@ def _get_basic_search_results(query, embeddings, top_2n=30):
     query_embedding = clip_embed_query(query)
 
     for name, props in embeddings.items():
-        emoji_embedding = props["embedding"]
-        dist = cosine(query_embedding, emoji_embedding)
-        props["dist"] = dist
-        props["name"] = name
+        image_embedding = props["image_embedding"]
+        name_embedding = props["name_embedding"]
 
-    results = sorted(embeddings.values(), key=lambda x: x["dist"])
+        image_dist = cosine(query_embedding, image_embedding)
+        name_dist = cosine(query_embedding, name_embedding)
+        props["image_dist"] = image_dist
+        props["name_dist"] = name_dist
+
+        props["name"] = name
+        props["description"] = props["description"]
+
+    results = sorted(embeddings.values(), key=lambda x: x["image_dist"])
 
     basic_results = results[:top_2n]
     basic_results = [
@@ -95,6 +101,7 @@ def _get_basic_search_results(query, embeddings, top_2n=30):
             "unicode": result["unicode"],
             "emoji": result["emoji"],
             "description": result["description"],
+            "name_dist": result["name_dist"],
         }
         for result in basic_results
     ]
@@ -113,23 +120,19 @@ def _get_ranks(results):
     return ranks
 
 
-def _fuse_reciprocal_ranks(ranks1, ranks2):
-    names = set(ranks1.keys()).union(set(ranks2.keys()))
-    fused_ranks = {}
+def _fuse_reciprocal_ranks(rank_lists):
+    all_rank_ids = set()
+    for ranks in rank_lists:
+        all_rank_ids.update(ranks.keys())
 
-    for name in list(names):
-        if name not in ranks1:
-            ranks1[name] = len(names) + 1
-        if name not in ranks2:
-            ranks2[name] = len(names) + 1
+    max_rank = len(all_rank_ids) + 1
+    fused_ranks = {rid: 0 for rid in all_rank_ids}
 
-    for name in names:
-        rank1 = ranks1[name]
-        rank2 = ranks2[name]
-        reciprocal_rank1 = _reciprocal_rank(rank1)
-        reciprocal_rank2 = _reciprocal_rank(rank2)
-        fused_rank = reciprocal_rank1 + reciprocal_rank2
-        fused_ranks[name] = fused_rank
+    for ranks in rank_lists:
+        for rid in all_rank_ids:
+            rank = ranks.get(rid, max_rank)
+            fused_ranks[rid] += _reciprocal_rank(rank)
+
     return sorted(fused_ranks, key=fused_ranks.get, reverse=True)
 
 
@@ -140,8 +143,7 @@ def _refine_search_results(prompt, basic_results):
     name_corpus = [result["name"] for result in basic_results]
 
     desc_sentence_pairs = [
-        [prompt, description.replace("A photo of", "")]
-        for description in desc_corpus
+        [prompt, description] for description in desc_corpus
     ]
 
     name_sentence_pairs = [[prompt, name] for name in name_corpus]
@@ -163,10 +165,20 @@ def _refine_search_results(prompt, basic_results):
         if name_scores[i] > threshold
     ]
 
+    name_embedding_results = sorted(
+        name_refined_results,
+        key=lambda x: x[0]["name_dist"],
+    )
+
     desc_ranks = _get_ranks([result[0] for result in desc_refined_results])
     name_ranks = _get_ranks([result[0] for result in name_refined_results])
+    image_emb_ranks = _get_ranks(basic_results)
+    name_emb_ranks = _get_ranks(
+        [result[0] for result in name_embedding_results]
+    )
 
-    fused_ranks = _fuse_reciprocal_ranks(desc_ranks, name_ranks)
+    ranks_list = [desc_ranks, name_ranks, image_emb_ranks, name_emb_ranks]
+    fused_ranks = _fuse_reciprocal_ranks(ranks_list)
     return fused_ranks
 
 
