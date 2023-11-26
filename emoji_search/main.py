@@ -32,7 +32,7 @@ def download_embeddings():
         os.makedirs(DATA_DIR, exist_ok=True)  # Ensure the DATA_DIR exists
 
         # Download the file
-        file_id = "1emrbtwIXfd24jrHUsxVs7TfiJHESoCOX"
+        file_id = "1ZaBN4rPRTautvk62e6l1UUBtIy51A_HQ"
         URL = "https://drive.google.com/uc?export=download"
         session = requests.Session()
         response = session.get(URL, params={"id": file_id}, stream=True)
