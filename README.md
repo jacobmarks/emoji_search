@@ -1,5 +1,7 @@
 # Emoji Search
 
+![emoji_search_CLI](https://github.com/jacobmarks/emoji_search/assets/12500356/cdc2e1ca-3243-495f-9128-c37c03c42848)
+
 Emoji Search is a Python-based CLI (Command Line Interface) application that allows users to semantically search emojis.
 
 ## Installation
